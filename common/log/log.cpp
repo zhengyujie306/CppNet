@@ -65,4 +65,6 @@ LogStreamParam SingletonLogger::GetStreamParam(LogLevel level, const char* file,
     return _logger->GetStreamParam(level, file, line);
 }
 
+
+
 }

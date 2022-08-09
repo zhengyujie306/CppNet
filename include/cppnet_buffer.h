@@ -12,8 +12,8 @@ namespace cppnet {
 
 class Buffer {
 public:
-    Buffer() {}
-    virtual ~Buffer() {}
+    Buffer() = default;
+    virtual ~Buffer() = default;
 
     // read to res buf but don't change the read point
     // return read size

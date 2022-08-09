@@ -16,7 +16,7 @@ template<typename T>
 class List {
 public:
     List(): _size(0) {}
-    ~List() {}
+    ~List() = default;
 
     uint32_t Size() { return _size; }
 

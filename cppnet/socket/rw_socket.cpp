@@ -139,7 +139,7 @@ void RWSocket::Connect(const std::string& ip, uint16_t port) {
     _addr.SetIp(ip);
     _addr.SetAddrPort(port);
 
-    auto actions = GetEventActions();
+    auto actions = GetEventActions(); //epoll_event_action
     if (actions) {
         _connecting = true;
         __connecting_socket_map[_sock] = shared_from_this();

@@ -12,6 +12,7 @@
 #include "cppnet/socket/connect_socket.h"
 #include "cppnet/event/action_interface.h"
 
+#include "common/log/log.h"
 #include "common/util/time.h"
 #include "common/timer/timer.h"
 #include "common/alloter/pool_alloter.h"
@@ -24,7 +25,8 @@ Dispatcher::Dispatcher(std::shared_ptr<CppNetBase> base, uint32_t thread_num, ui
     _cur_utc_time(0),
     _timer_id_creater(0),
     _cppnet_base(base) {
-
+    
+    // does it mean the dispatcher's time out is 1 minute?
     _timer = MakeTimer1Min();
 
     _event_actions = MakeEventActions();
@@ -34,7 +36,7 @@ Dispatcher::Dispatcher(std::shared_ptr<CppNetBase> base, uint32_t thread_num, ui
     Start();
 }
 
-Dispatcher::Dispatcher(std::shared_ptr<CppNetBase> base, uint32_t base_id):
+Dispatcher::Dispatcher(const std::shared_ptr<CppNetBase>& base, uint32_t base_id):
     _cur_utc_time(0),
     _timer_id_creater(0),
     _cppnet_base(base) {
@@ -97,7 +99,6 @@ void Dispatcher::Listen(uint64_t sock, const std::string& ip, uint16_t port) {
 
     if (std::this_thread::get_id() == _local_thread_id) {
         task();
-
     } else {
         PostTask(task);
     }
@@ -114,6 +115,7 @@ void Dispatcher::Connect(const std::string& ip, uint16_t port) {
 
     if (std::this_thread::get_id() == _local_thread_id) {
         task();
+
 
     } else {
         PostTask(task);
@@ -201,10 +203,12 @@ void Dispatcher::DoTask() {
     {
         std::unique_lock<std::mutex> lock(_task_list_mutex);
         func_vec.swap(_task_list);
+        // when exit this block the lock will be freed
+        // vector.swap will clean _task_list and func_vec get all data of _task_list
     }
-
-    for (std::size_t i = 0; i < func_vec.size(); ++i) {
-        func_vec[i]();
+    // then call all functions
+    for (auto & i : func_vec) {
+        i();
     }
 }
 

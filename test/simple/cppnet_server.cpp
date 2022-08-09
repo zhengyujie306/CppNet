@@ -16,11 +16,11 @@ std::string GetMsg() {
     return (msg + std::to_string(msg_index));
 }
 
-void WriteFunc(Handle handle, uint32_t len) {
+void WriteFunc(const Handle& handle, uint32_t len) {
     std::cout << "[WriteFunc]  length : " << len << std::endl;
 }
 
-void ReadFunc(Handle handle, std::shared_ptr<Buffer> data, uint32_t len) {
+void ReadFunc(const Handle& handle, const std::shared_ptr<Buffer>& data, uint32_t len) {
     std::cout << "[ReadFunc]" << std::endl;
 
     char buf[1024] = {0};
@@ -35,7 +35,7 @@ void ReadFunc(Handle handle, std::shared_ptr<Buffer> data, uint32_t len) {
     handle->Write(msg.c_str(), (uint32_t)msg.length());
 }
 
-void ConnectFunc(Handle handle, uint32_t err) {
+void ConnectFunc(const Handle& handle, uint32_t err) {
     if (err == CEC_SUCCESS) {
         std::string ip;
         uint16_t port;
@@ -50,7 +50,7 @@ void ConnectFunc(Handle handle, uint32_t err) {
     }
 }
 
-void DisConnectionFunc(Handle handle, uint32_t err) {
+void DisConnectionFunc(const Handle& handle, uint32_t err) {
     std::cout << "[DisConnectionFunc] : " << err << std::endl;
 }
 
@@ -67,4 +67,6 @@ int main() {
     net.ListenAndAccept("0.0.0.0", 8999);
 
     net.Join();
+
+
 }

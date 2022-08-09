@@ -4,6 +4,7 @@
 // Author: caozhiyi (caozhiyi5@gmail.com)
 
 #include <ostream>
+#include <utility>
 #include "address.h"
 
 namespace cppnet {
@@ -20,23 +21,16 @@ Address::Address(AddressType at):
     
 }
 
-Address::Address(AddressType at, const std::string& ip, uint16_t port):
+Address::Address(AddressType at, std::string ip, uint16_t port):
     _address_type(at),
-    _ip(ip),
+    _ip(std::move(ip)),
     _port(port) {
 
 }
 
-Address::Address(const Address& addr):
-    _address_type(addr._address_type),
-    _ip(addr._ip),
-    _port(addr._port) {
+Address::Address(const Address& addr)= default;
 
-}
-
-Address::~Address() {
-
-}
+Address::~Address() = default;
 
 void Address::SetIp(const std::string& ip) {
     if (_address_type == AT_IPV6) {
@@ -47,7 +41,7 @@ void Address::SetIp(const std::string& ip) {
     }
 }
 
-const std::string Address::AsString() {
+std::string Address::AsString() {
     if (_address_type == AT_IPV6) {
         return "[" + _ip + "]:" + std::to_string(_port);
 
@@ -90,7 +84,7 @@ std::string Address::ToIpv4(const std::string& ip) {
     }
     std::size_t pos = ip.rfind(':');
 
-    return std::string(&ip[pos], ip.length() - pos);
+    return {&ip[pos], ip.length() - pos};
 }
 
 }

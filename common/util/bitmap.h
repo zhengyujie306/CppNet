@@ -18,7 +18,7 @@ public:
     Bitmap();
     ~Bitmap();
 
-    // init whit array size.
+    // init with array size.
     // one size means bitmap support 64 bit set.
     bool Init(uint32_t size);
 
@@ -38,7 +38,7 @@ public:
     void Clear();
 
 private:
-    // which index of vector used
+    // which index of vector used // ? indexes
     uint32_t _vec_bitmap;
     // all bit
     std::vector<int64_t> _bitmap;

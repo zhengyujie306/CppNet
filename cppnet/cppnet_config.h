@@ -30,11 +30,11 @@ static const uint16_t __max_block_num      = 20;
 static const uint32_t __max_write_cache    = 1024 * 1024 * 4;
 
 // log level. 
-static const uint16_t __log_level          = 15; // info level
+static const uint16_t __log_level          = 31; // info level
 // log file name.
 static const std::string __log_file_name   = "cppnet_log";
 // open log print.
-static const bool __print_log              = false;
+static const bool __print_log              = true;
 
 // EPOLL use et model.
 static const bool __epoll_use_et                   = true;

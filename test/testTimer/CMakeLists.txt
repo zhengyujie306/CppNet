@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
-project(testBitMap)
+project(testTimer)
 
-add_executable(${PROJECT_NAME} testBitMap.cpp)
+add_executable(${PROJECT_NAME} testTimer.cpp)
 
 target_link_libraries(${PROJECT_NAME} cppnet)

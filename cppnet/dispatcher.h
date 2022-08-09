@@ -30,12 +30,12 @@ class Dispatcher:
 
 public:
     Dispatcher(std::shared_ptr<CppNetBase> base, uint32_t thread_num, uint32_t base_id);
-    Dispatcher(std::shared_ptr<CppNetBase> base, uint32_t base_id = 0);
-    ~Dispatcher();
+    explicit Dispatcher(const std::shared_ptr<CppNetBase>& base, uint32_t base_id = 0);
+    ~Dispatcher() override;
 
-    void Run();
+    void Run() override;
 
-    void Stop();
+    void Stop() override;
 
     void Listen(uint64_t sock, const std::string& ip, uint16_t port);
 

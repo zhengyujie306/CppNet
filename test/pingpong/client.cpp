@@ -43,7 +43,7 @@ class Session {
        return _messages_read;
     }
 
-    void OnConnection(cppnet::Handle handle);
+    void OnConnection(const cppnet::Handle& handle) const;
 
     void OnMessage(cppnet::Handle handle, cppnet::BufferPtr data, uint32_t) {
        char buff[65535];
@@ -155,7 +155,7 @@ private:
     std::unordered_map<cppnet::Handle, Session*> _sessions;
 };
 
-void Session::OnConnection(cppnet::Handle handle) {
+void Session::OnConnection(const cppnet::Handle& handle) const {
     SetNoDelay(handle->GetSocket());
     auto msg = _owner->Message();
     handle->Write(msg.c_str(), (uint32_t)msg.length());
@@ -175,7 +175,7 @@ int main(int argc, char* argv[]) {
     int session_count = atoi(argv[5]);
     int timeout       = atoi(argv[6]);
 
-    cppnet::CppNet* net = new cppnet::CppNet;
+    auto* net = new cppnet::CppNet;
     net->Init(threadCount);
 
     Client client(block_size, session_count, timeout, ip, port, net);

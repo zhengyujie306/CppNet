@@ -4,6 +4,7 @@
 // Author: caozhiyi (caozhiyi5@gmail.com)
 
 #include <algorithm>
+#include <utility>
 #include "timer_slot.h"
 #include "timer_container.h"
 
@@ -14,14 +15,12 @@ TimerContainer::TimerContainer(std::shared_ptr<TimerContainer> sub_timer, TIME_U
     _size(max / unit),
     _timer_max(max),
     _cur_time(0),
-    _sub_timer(sub_timer) {
+    _sub_timer(std::move(sub_timer)) {
 
     _bitmap.Init(_size);
 }
 
-TimerContainer::~TimerContainer() {
-
-}
+TimerContainer::~TimerContainer() = default;
 
 bool TimerContainer::AddTimer(std::weak_ptr<TimerSlot> t, uint32_t time, bool always) {
     if (time >= _timer_max) {
@@ -152,7 +151,7 @@ uint32_t TimerContainer::TimerRun(uint32_t time) {
 
     uint32_t prev_time = _cur_time;
     _cur_time += time_pass;
-    while(1) {
+    while(true) {
         int32_t next_time = _bitmap.GetMinAfter(prev_time);
         if (next_time < 0) {
             break;
@@ -172,7 +171,7 @@ uint32_t TimerContainer::TimerRun(uint32_t time) {
 
     if (run_setp > 0) {
         prev_time = 0;
-        while (1) {
+        while (true) {
             int32_t next_time = _bitmap.GetMinAfter(prev_time);
             if (next_time < 0) {
                 break;
@@ -219,7 +218,7 @@ int32_t TimerContainer::LocalMinTime() {
     return NO_TIMER;
 }
 
-bool TimerContainer::InnerAddTimer(std::shared_ptr<TimerSlot> ptr, uint32_t time) {
+bool TimerContainer::InnerAddTimer(const std::shared_ptr<TimerSlot>& ptr, uint32_t time) {
     if (time > _timer_max) {
         return false;
     }
@@ -271,19 +270,19 @@ void TimerContainer::GetIndexTimer(std::vector<std::weak_ptr<TimerSlot>>& run_ti
     }
     auto& bucket = bucket_iter->second;
 
-    for (auto timer_list = bucket.begin(); timer_list != bucket.end(); timer_list++) {
-        if (timer_list->first == 0) {
-            run_timer_solts.insert(run_timer_solts.end(), timer_list->second.begin(), timer_list->second.end());
+    for (auto & timer_list : bucket) {
+        if (timer_list.first == 0) {
+            run_timer_solts.insert(run_timer_solts.end(), timer_list.second.begin(), timer_list.second.end());
             continue;
         }
 
-        if (timer_list->first <= time_pass) {
-            run_timer_solts.insert(run_timer_solts.end(), timer_list->second.begin(), timer_list->second.end());
+        if (timer_list.first <= time_pass) {
+            run_timer_solts.insert(run_timer_solts.end(), timer_list.second.begin(), timer_list.second.end());
             continue;
         }
 
-        for (auto timer = timer_list->second.begin(); timer != timer_list->second.end(); timer++) {
-            auto target = timer->lock();
+        for (auto & timer : timer_list.second) {
+            auto target = timer.lock();
             sub_timer_solts.push_back(target);
         }
     }
@@ -295,8 +294,8 @@ void TimerContainer::GetIndexTimer(std::vector<std::weak_ptr<TimerSlot>>& run_ti
 void TimerContainer::DoTimer(std::vector<std::weak_ptr<TimerSlot>>& run_timer_solts,
     std::vector<std::weak_ptr<TimerSlot>>& sub_timer_solts) {
     // timer call back
-    for (auto iter = run_timer_solts.begin(); iter != run_timer_solts.end(); iter++) {
-        auto ptr = iter->lock();
+    for (auto & run_timer_solt : run_timer_solts) {
+        auto ptr = run_timer_solt.lock();
         if (!ptr) {
             continue;
         }
@@ -320,8 +319,8 @@ void TimerContainer::DoTimer(std::vector<std::weak_ptr<TimerSlot>>& run_timer_so
     if (!_sub_timer) {
         return;
     }
-    for (auto iter = sub_timer_solts.begin(); iter != sub_timer_solts.end(); iter++) {
-        auto ptr = iter->lock();
+    for (auto & sub_timer_solt : sub_timer_solts) {
+        auto ptr = sub_timer_solt.lock();
         if (!ptr) {
             continue;
         }

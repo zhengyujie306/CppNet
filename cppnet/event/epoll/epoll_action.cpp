@@ -103,7 +103,7 @@ bool EpollEventActions::AddSendEvent(Event* event) {
     }
     event->AddType(ET_WRITE);
 
-    epoll_event* ep_event = (epoll_event*)event->GetData();
+    auto* ep_event = (epoll_event*)event->GetData();
     if (!ep_event) {
         if (!MakeEpollEvent(event, ep_event)) {
             return false;
@@ -136,7 +136,7 @@ bool EpollEventActions::AddRecvEvent(Event* event) {
     }
     event->AddType(ET_READ);
     
-    epoll_event* ep_event = (epoll_event*)event->GetData();
+    auto* ep_event = (epoll_event*)event->GetData();
     if (!ep_event) {
         if (!MakeEpollEvent(event, ep_event)) {
             return false;
@@ -169,7 +169,7 @@ bool EpollEventActions::AddAcceptEvent(Event* event) {
     }
     event->AddType(ET_ACCEPT);
 
-    epoll_event* ep_event = (epoll_event*)event->GetData();
+    auto* ep_event = (epoll_event*)event->GetData();
     if (!ep_event) {
         // TODO where to delete it.
         ep_event = new epoll_event;
@@ -210,7 +210,7 @@ bool EpollEventActions::AddConnection(Event* event, Address& addr) {
         if (event->GetType() & ET_INACTIONS) {
             return false;
         }
-   
+
         // set no unblocking before connect.
         SocketNoblocking(sock->GetSocket());
 
@@ -302,6 +302,7 @@ void EpollEventActions::OnEvent(std::vector<epoll_event>& event_vec, int16_t num
 
     for (int i = 0; i < num; i++) {
         if ((uint32_t)event_vec[i].data.fd == _pipe[0]) {
+            //data.fd == _pipe[0] means this event is sent by self to wake up this thread, so we will not process it.
             LOG_WARN("weak up the IO thread, index : %d", i);
             char buf[4];
 #ifdef __win__

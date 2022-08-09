@@ -121,7 +121,7 @@ void ConnectSocket::OnAccept() {
         sock->SetListenPort(_addr.GetAddrPort());
         sock->SetCppNetBase(cppnet_base);
         sock->SetEventActions(_event_actions);
-        sock->SetAddress(std::move(address));
+        sock->SetAddress(address);
         sock->SetDispatcher(GetDispatcher());
 
         __all_socket_map[ret._return_value] = sock;

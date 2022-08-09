@@ -18,21 +18,21 @@ class BufferBlock:
     public ListSlot<BufferBlock> {
 
 public:
-    BufferBlock(std::shared_ptr<BlockMemoryPool>& alloter);
-    ~BufferBlock();
+    explicit BufferBlock(std::shared_ptr<BlockMemoryPool>& alloter);
+    ~BufferBlock() override;
 
     // read to res buf but don't change the read point
     // return read size
-    uint32_t ReadNotMovePt(char* res, uint32_t len);
+    uint32_t ReadNotMovePt(char* res, uint32_t len) override;
 
     uint32_t Read(std::shared_ptr<InnerBuffer> buffer, uint32_t len = 0);
     uint32_t Write(std::shared_ptr<InnerBuffer> buffer, uint32_t len = 0);
 
-    uint32_t Read(char* res, uint32_t len);
-    uint32_t Write(const char* data, uint32_t len);
+    uint32_t Read(char* res, uint32_t len) override;
+    uint32_t Write(const char* data, uint32_t len) override;
     
     // clear all data
-    void Clear();
+    void Clear() override;
 
     // move read point
     int32_t MoveReadPt(int32_t len);

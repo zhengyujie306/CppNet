@@ -19,16 +19,16 @@ std::string GetMsg() {
     return "It is a test msg, It is a long test msg. index : " + std::to_string(msg_index++) + __buf_spilt;
 }
 
-void ReadFunc(Handle handle, cppnet::BufferPtr data, uint32_t len) {
+void ReadFunc(const Handle& handle, const cppnet::BufferPtr& data, uint32_t len) {
     // print
     char buf[1024] = {0};
     data->Read(buf, 1024);
     std::cout << buf << std::endl;
     cppnet::Sleep(100);
-    handle->Write(buf, len);
+    //handle->Write(buf, len);
 }
 
-void ConnectFunc(Handle handle, uint32_t error) {
+void ConnectFunc(const Handle& handle, uint32_t error) {
     if (error != CEC_SUCCESS) {
         std::cout << "something err while connect : " << error << std::endl;
     } else {
@@ -39,7 +39,7 @@ void ConnectFunc(Handle handle, uint32_t error) {
     }
 }
 
-void DisConnectionFunc(Handle handle, uint32_t err) {
+void DisConnectionFunc(const Handle& handle, uint32_t err) {
     __stop = true;
     handle_map.erase(handle->GetSocket());
     if (handle_map.empty()) {
@@ -61,6 +61,4 @@ int main() {
     cppnet::Sleep(20000);
 
     std::cout << "200 clients all connected" << std::endl;
-    
-    net.Join();
 }

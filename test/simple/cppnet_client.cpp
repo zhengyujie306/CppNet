@@ -15,17 +15,17 @@ std::string GetMsg() {
     return (msg + std::to_string(msg_index));
 }
 
-void WriteFunc(Handle handle, uint32_t len) {
+void WriteFunc(const Handle& handle, uint32_t len) {
     std::cout << " [WriteFunc]  length : " << len << std::endl;
 }
 
 
-void ReadFunc(Handle handle, std::shared_ptr<Buffer> data, uint32_t len) {
+void ReadFunc(const Handle& handle, const std::shared_ptr<Buffer>& data, uint32_t len) {
     std::cout << " [ReadFunc]" << std::endl;
 
     char buf[1024] = {0};
     data->Read(buf, 1024);
-    std::cout << "recv :"<< buf << std::endl;
+    std::cout << " recv :"<< buf << std::endl;
     data->Clear();
 
     std::cout << " Thread ID : " << std::this_thread::get_id() << std::endl;
@@ -33,31 +33,36 @@ void ReadFunc(Handle handle, std::shared_ptr<Buffer> data, uint32_t len) {
     
     Sleep(1000);
 
-    if (msg_index >= 5) {
-        handle->Close();
+    if (msg_index >= 1) {
+        //Sleep(1000);
+        //handle->Close();
         return;
     }
 
-    auto msg = GetMsg();
-    handle->Write(msg.c_str(), (uint32_t)msg.length());
+    auto message = GetMsg();
+    handle->Write(message.c_str(), (uint32_t)message.length());
 }
 
-void ConnectFunc(Handle handle, uint32_t err) {
+void ConnectFunc(const Handle& handle, uint32_t err) {
     if (err == CEC_SUCCESS) {
         std::string ip;
         uint16_t port;
         handle->GetAddress(ip, port);
         std::cout << " [ConnectFunc] : ip : " << ip << "port : " << port << std::endl;
-        auto msg = GetMsg();
-        handle->Write(msg.c_str(), (uint32_t)msg.length());
+        auto message = GetMsg();
+        handle->Write(message.c_str(), (uint32_t)message.length());
 
     } else {
         std::cout << " [ConnectFunc] some thing error : " << err << std::endl;
     }
 }
 
-void DisConnectionFunc(Handle handle, uint32_t err) {
+void DisConnectionFunc(const Handle& handle, uint32_t err) {
     std::cout << " [DisConnectionFunc] : " << err << std::endl;
+}
+
+void TimeCallBack(void*) {
+    std::cout << "time out!!!\n";
 }
 
 int main() {
@@ -70,6 +75,6 @@ int main() {
     net.SetDisconnectionCallback(DisConnectionFunc);
 
     net.Connection("127.0.0.1", 8999);
-
-    Sleep(8000);
+    //Sleep(8000);
+    net.Destory();
 }

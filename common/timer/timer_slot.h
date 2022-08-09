@@ -24,7 +24,7 @@ enum TIME_INDEX_TYPE: uint16_t {
 class TimerSlot {
 public:
     TimerSlot();
-    ~TimerSlot() {}
+    ~TimerSlot() = default;
 
 //private:
 public:
@@ -38,21 +38,21 @@ public:
 
     void SetInterval(uint32_t interval);
     uint32_t GetTotalInterval();
-    uint32_t GetLeftInterval();
+    uint32_t GetLeftInterval() const;
 
     void ResetTime();
     uint32_t TimePass(uint32_t time);
 
     void SetInTimer();
-    bool IsInTimer();
+    bool IsInTimer() const;
     void RmInTimer();
 
     void SetAlways();
-    bool IsAlways();
+    bool IsAlways() const;
     void RmAlways();
 
     void SetCurIndex(uint16_t index, uint16_t type);
-    void GetCurIndex(uint16_t& index, uint16_t& type);
+    void GetCurIndex(uint16_t& index, uint16_t& type) const;
 
 private:
     friend class TimerContainer;

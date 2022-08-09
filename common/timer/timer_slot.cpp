@@ -23,7 +23,7 @@ uint32_t TimerSlot::GetTotalInterval() {
     return _total_interval; 
 }
 
-uint32_t TimerSlot::GetLeftInterval() { 
+uint32_t TimerSlot::GetLeftInterval() const {
     return _left_interval; 
 }
 
@@ -41,7 +41,7 @@ void TimerSlot::SetInTimer() {
     _total_interval |= TSF_IN_TIMER;
 }
 
-bool TimerSlot::IsInTimer() {
+bool TimerSlot::IsInTimer() const {
     return _total_interval & TSF_IN_TIMER;
 }
 
@@ -53,7 +53,7 @@ void TimerSlot::SetAlways() {
     _total_interval |= TSF_ALWAYS;
 }
 
-bool TimerSlot::IsAlways() {
+bool TimerSlot::IsAlways() const {
     return _total_interval & TSF_ALWAYS;
 }
 
@@ -65,7 +65,7 @@ void TimerSlot::SetCurIndex(uint16_t index, uint16_t type) {
     _cur_index = index | type;
 }
 
-void TimerSlot::GetCurIndex(uint16_t& index, uint16_t& type) {
+void TimerSlot::GetCurIndex(uint16_t& index, uint16_t& type) const {
     index = _cur_index & ~TIT_MUSK;
     type = _cur_index & TIT_MUSK;
 }

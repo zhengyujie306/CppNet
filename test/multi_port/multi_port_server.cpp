@@ -8,16 +8,35 @@
 
 using namespace cppnet;
 
-void ReadFunc(Handle handle, std::shared_ptr<Buffer> data, uint32_t len) {
-    char msg_buf[128] = {0};
-    // get recv data to send back.
-    uint32_t size = data->Read(msg_buf, 128);
-    
-    std::cout << "get message: " << msg_buf << " listen port is: " << handle->GetListenPort() << std::endl;
+#ifdef __win__
+#include <winsock2.h>
+void SetNoDelay(const uint64_t& sock) {
+    int opt = 1;
+    int ret = setsockopt(sock, SOL_SOCKET, TCP_NODELAY, (const char*)&opt, sizeof(opt));
+}
+#else
+#include <netinet/tcp.h>
+#include <netinet/in.h>
+void SetNoDelay(const uint64_t& sock) {
+    int optval = 1;
+    setsockopt(sock, IPPROTO_TCP, TCP_NODELAY,
+               &optval, static_cast<socklen_t>(sizeof(optval)));
+}
+#endif
+
+
+void ReadFunc(const Handle& handle, const cppnet::BufferPtr& data, uint32_t len) {
+    // print
+    char buf[1024] = {0};
+    data->Read(buf, 1024);
+    cppnet::Sleep(100);
+    handle->Write(buf, len);
+    std::cout << "get message: " << buf << " listen port is: " << handle->GetListenPort() << std::endl;
 }
 
-void ConnectFunc(Handle handle, uint32_t err) {
+void ConnectFunc(const Handle& handle, uint32_t err) {
     if (err == CEC_SUCCESS) {
+        SetNoDelay(handle->GetSocket());
         std::cout << handle->GetListenPort() << " port get connect socket: " << handle->GetSocket() << std::endl;
 
     } else {

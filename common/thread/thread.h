@@ -16,7 +16,9 @@ namespace cppnet {
 class Thread {
 public:
     Thread(): _stop(true) {}
-    virtual ~Thread() {}
+    virtual ~Thread() = default;
+    Thread(const Thread&) = delete;
+    Thread& operator=(const Thread&) = delete;
 
     //base option
     virtual void Start() {
@@ -42,9 +44,7 @@ public:
         return _stop;
     }
 
-protected:
-    Thread(const Thread&) = delete;
-    Thread& operator=(const Thread&) = delete;
+
 
 protected:
     std::atomic_bool _stop;

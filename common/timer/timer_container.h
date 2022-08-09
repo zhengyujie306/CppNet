@@ -28,28 +28,28 @@ public:
     TimerContainer(std::shared_ptr<TimerContainer> sub_timer, TIME_UNIT unit, TIME_UNIT max);
     ~TimerContainer();
 
-    bool AddTimer(std::weak_ptr<TimerSlot> t, uint32_t time, bool always = false);
-    bool RmTimer(std::weak_ptr<TimerSlot> t);
+    bool AddTimer(std::weak_ptr<TimerSlot> t, uint32_t time, bool always = false) override;
+    bool RmTimer(std::weak_ptr<TimerSlot> t) override;
 
     // get min next time out time
     // return
     // >= 0 : the next time
     //  < 0 : has no timer
-    int32_t MinTime();
+    int32_t MinTime() override;
     // return the timer wheel current time
-    int32_t CurrentTimer();
+    int32_t CurrentTimer() override;
     // timer wheel run time 
     // return carry
-    uint32_t TimerRun(uint32_t step);
+    uint32_t TimerRun(uint32_t step) override;
 
-    bool Empty();
+    bool Empty() override;
     void Clear();
 
     // get current timer wheel timeout time
     int32_t LocalMinTime();
-    bool InnerAddTimer(std::shared_ptr<TimerSlot> ptr, uint32_t time);
+    bool InnerAddTimer(const std::shared_ptr<TimerSlot>& ptr, uint32_t time);
 
-    void SetRootTimer(std::shared_ptr<TimerContainer> timer) { _root_timer = timer; }
+    void SetRootTimer(const std::shared_ptr<TimerContainer>& timer) { _root_timer = timer; }
 
 protected:
     uint16_t TimeUnit2TimeType(TIME_UNIT tu);

@@ -35,10 +35,11 @@ void OnRequest(const HttpRequest& req, HttpResponse& resp) {
     } else if (req.GetPath() == "/favicon.ico") {
         resp.SetStatusCode(k200Ok);
         resp.SetStatusMessage("OK");
-        resp.SetContentType("image/png");
+        resp.SetContentType("image/x-icon");
         if (image.empty()) {
             image = GetFile();
         }
+        //std::cout << image << std::endl;
         resp.SetBody(image);
 
     } else if (req.GetPath() == "/hello") {
@@ -60,10 +61,6 @@ std::string GetFile() {
     std::string str((std::istreambuf_iterator<char>(t)),
         std::istreambuf_iterator<char>());
     return std::move(str);
-}
-
-void DisConnectionFunc(const cppnet::Handle& , uint32_t ) {
-    //std::cout << "[DisConnectionFunc]" << std::endl;
 }
 
 int main() {

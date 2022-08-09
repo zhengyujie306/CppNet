@@ -20,7 +20,7 @@ class Address {
 public:
     Address();
     Address(AddressType at);
-    Address(AddressType at, const std::string& ip, uint16_t port);
+    Address(AddressType at, std::string ip, uint16_t port);
     Address(const Address& addr);
     ~Address();
 
@@ -33,7 +33,7 @@ public:
     void SetAddrPort(uint16_t port) { _port = port; }
     uint16_t GetAddrPort() { return _port; }
 
-    const std::string AsString();
+    std::string AsString();
 
     friend std::ostream& operator<< (std::ostream &out, Address &addr);
     friend bool operator==(const Address &addr1, const Address &addr2);
