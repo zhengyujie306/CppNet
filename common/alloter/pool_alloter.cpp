@@ -21,9 +21,9 @@ PoolAlloter::PoolAlloter() :
 }
 
 PoolAlloter::~PoolAlloter() {
-    for (auto iter = _malloc_vec.begin(); iter != _malloc_vec.end(); ++iter) {
-        if (*iter) {
-            void* data = (void*)*iter;
+    for (auto & iter : _malloc_vec) {
+        if (iter) {
+            void* data = (void*)iter;
             _alloter->Free(data);
         }
     }
@@ -115,7 +115,7 @@ void* PoolAlloter::ReFill(uint32_t size, uint32_t num) {
 void* PoolAlloter::ChunkAlloc(uint32_t size, uint32_t& nums) {
     char* res;
     uint32_t need_bytes = size * nums;
-    uint32_t left_bytes = uint32_t(_pool_end - _pool_start);
+    auto left_bytes = uint32_t(_pool_end - _pool_start);
 
     //pool is enough
     if (left_bytes >= need_bytes) {

@@ -24,7 +24,7 @@ class BufferQueue:
 public:
     BufferQueue(const std::shared_ptr<BlockMemoryPool>& block_pool, 
     const std::shared_ptr<AlloterWrap>& alloter);
-    virtual ~BufferQueue();
+    ~BufferQueue() override;
 
     // read to res buf but don't change the read point
     // return read size

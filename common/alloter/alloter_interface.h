@@ -15,8 +15,8 @@ static const uint16_t __align = sizeof(unsigned long);
 
 class Alloter {
 public:
-    Alloter() {}
-    virtual ~Alloter() {}
+    Alloter() = default;
+    virtual ~Alloter() = default;
 
     virtual void* Malloc(uint32_t size) = 0;
     virtual void* MallocAlign(uint32_t size) = 0;
@@ -65,7 +65,8 @@ T* AlloterWrap::PoolNew(Args&&... args) {
     if (!data) {
         return nullptr;
     }
-
+    // Placement new operator.
+    // This operator will use args as parameters to initial an object T and place it in the address of data
     T* res = new(data) T(std::forward<Args>(args)...);
     return res;
 }
@@ -73,6 +74,7 @@ T* AlloterWrap::PoolNew(Args&&... args) {
 template<typename T, typename... Args >
 std::shared_ptr<T> AlloterWrap::PoolNewSharePtr(Args&&... args) {
     T* ret = PoolNew<T>(std::forward<Args>(args)...);
+    // the second parameter is a custom destructor
     return std::shared_ptr<T>(ret, [this](T* &c) { PoolDelete(c); });
 }
 

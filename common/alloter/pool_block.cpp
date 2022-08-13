@@ -79,10 +79,9 @@ void BlockMemoryPool::ReleaseHalf() {
     size_t hale = size / 2;
     for (auto iter = _free_mem_vec.begin(); iter != _free_mem_vec.end();) {
         void* mem = *iter;
-
-        iter = _free_mem_vec.erase(iter);
         free(mem);
-        
+        iter = _free_mem_vec.erase(iter);
+
         size--;
         if (iter == _free_mem_vec.end() || size <= hale) {
             break;

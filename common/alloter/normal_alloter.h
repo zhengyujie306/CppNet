@@ -13,11 +13,11 @@ namespace cppnet {
 class NormalAlloter : public Alloter {
 public:
     NormalAlloter();
-    ~NormalAlloter();
+    ~NormalAlloter() override;
 
-    void* Malloc(uint32_t size);
-    void* MallocAlign(uint32_t size);
-    void* MallocZero(uint32_t size);
+    void* Malloc(uint32_t size) override;
+    void* MallocAlign(uint32_t size) override;
+    void* MallocZero(uint32_t size) override;
 
     void Free(void* &data, uint32_t len = 0);
 };

@@ -22,7 +22,7 @@ static const uint32_t __default_number_add_nodes = 20;
 class PoolAlloter : public Alloter {
 public:
     PoolAlloter();
-    ~PoolAlloter();
+    ~PoolAlloter() override;
 
     void* Malloc(uint32_t size);
     void* MallocAlign(uint32_t size);

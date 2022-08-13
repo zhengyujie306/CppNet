@@ -35,7 +35,18 @@ include_directories(${CMAKE_SOURCE_DIR})
 
 add_subdirectory(common)
 add_subdirectory(cppnet)
+add_subdirectory(include)
 
-add_library(${PROJECT_NAME} STATIC ${common_source} ${cppnet_source})
+add_library(${PROJECT_NAME} SHARED ${common_source} ${cppnet_source})
+add_library(${PROJECT_NAME}_static STATIC ${common_source} ${cppnet_source})
+
+set_target_properties(${PROJECT_NAME}_static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+set_target_properties(${PROJECT_NAME} PROPERTIES VERSION 1.1 SOVERSION 1)
+
+install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_static
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+
+install(FILES ${cppnet_heads} DESTINATION cppnet)
 
 add_subdirectory(test)
