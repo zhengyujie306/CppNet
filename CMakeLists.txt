@@ -47,6 +47,5 @@ install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_static
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
 
-install(FILES ${cppnet_heads} DESTINATION include/cppnet)
 
-add_subdirectory(test)
+# add_subdirectory(test)

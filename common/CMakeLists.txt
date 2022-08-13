@@ -24,3 +24,13 @@ ELSEIF (UNIX)
 ENDIF ()
 
 set(common_source ${src_files} PARENT_SCOPE)
+
+add_subdirectory(alloter)
+add_subdirectory(buffer)
+add_subdirectory(log)
+add_subdirectory(network)
+add_subdirectory(os)
+add_subdirectory(structure)
+add_subdirectory(thread)
+add_subdirectory(timer)
+add_subdirectory(util)
